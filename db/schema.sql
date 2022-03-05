@@ -3,31 +3,46 @@ CREATE DATABASE company_db;
 
 USE company_db;
 
-CREATE TABLE department (
-  id INT,
-  name VARCHAR(30),
-  PRIMARY KEY (id)
+CREATE TABLE `new_schema`.`departments` (
+  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `name` VARCHAR(255) NOT NULL,
+  PRIMARY KEY (`id`));
+
+
+CREATE TABLE `new_schema`.`roles` (
+  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `title` VARCHAR(255) NOT NULL,
+  `salary` DECIMAL NOT NULL,
+  `department_id` INT UNSIGNED NULL,
+  PRIMARY KEY (`id`),
+  INDEX `foreignkey_roles_dept_idx` (`department_id` ASC) VISIBLE,
+  CONSTRAINT `foreignkey_roles_dept`
+    FOREIGN KEY (`department_id`)
+    REFERENCES `new_schema`.`departments` (`id`)
+    ON DELETE CASCADE
+    ON UPDATE NO ACTION);
 );
 
-CREATE TABLE roles (
-  id INT PRIMARY KEY,
-  title VARCHAR(30),
-  salary DECIMAL,
-  department_id INT,
-  FOREIGN KEY (department_id)
-  REFERENCES department(id)
-  ON DELETE SET NULL
+CREATE TABLE `new_schema`.`employees` (
+  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `first_name` VARCHAR(255) NOT NULL,
+  `last_name` VARCHAR(255) NOT NULL,
+  `role_id` INT UNSIGNED NOT NULL,
+  `manager_id` INT UNSIGNED NULL,
+  PRIMARY KEY (`id`),
+  CONSTRAINT `fk_employees_role`
+    FOREIGN KEY (`id`)
+    REFERENCES `new_schema`.`roles` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION);
 );
 
-CREATE TABLE employee (
-  id INT PRIMARY KEY,
-  first_name VARCHAR(30),
-  last_name VARCHAR(30),
-  role_id INT,
-  manager_id INT,
-  FOREIGN KEY (role_id)
-  REFERENCES roles(id)
-  FOREIGN KEY (manager_id)
-  REFERENCES employee(id)
+ALTER TABLE `new_schema`.`employees` 
+ADD INDEX `fk_employees_manager_idx` (`manager_id` ASC) VISIBLE;
+;
+ALTER TABLE `new_schema`.`employees` 
+ADD CONSTRAINT `fk_employees_manager`
+  FOREIGN KEY (`manager_id`)
+  REFERENCES `new_schema`.`employees` (`id`)
   ON DELETE SET NULL
-);
+  ON UPDATE NO ACTION;

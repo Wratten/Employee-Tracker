@@ -1,19 +1,12 @@
-// CRUD
 const inquirer = require("inquirer");
 const connectDb = require("../db/connection");
 require("console.table");
 
-/**
- * Create a new Role in db
- * @param {String} Title
- * @param {String} salary
- * @param {number} roleId
- */
 async function createRole() {
   //
   const connection = await connectDb();
 
-  inquirer
+  return inquirer
     .prompt([
       {
         type: "input",
@@ -52,10 +45,6 @@ async function createRole() {
     });
 }
 
-/**
- * getting all Roles from db
- */
-
 async function getRoles() {
   const connection = await connectDb();
 
@@ -63,11 +52,6 @@ async function getRoles() {
 
   return roles[0];
 }
-
-// future
-// function updateRole(id, payload) {
-//
-// }
 
 module.exports = {
   createRole,

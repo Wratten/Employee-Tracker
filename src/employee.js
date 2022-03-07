@@ -1,13 +1,13 @@
-// CRUD
+// Get dependencies
 const inquirer = require("inquirer");
 const connectDb = require("../db/connection");
 const { getRoles } = require("./role");
 require("console.table");
 
-async function createEmployee(name, firstName, lastName, roleId, managerId) {
+async function createEmployee() {
   // connect to db
   const connection = await connectDb();
-  inquirer
+  return inquirer
     .prompt([
       {
         type: "input",
@@ -30,6 +30,7 @@ async function createEmployee(name, firstName, lastName, roleId, managerId) {
         name: "newManagerId",
       },
     ])
+
     .then((answer) => {
       console.log(answer);
       connection.query(
@@ -50,7 +51,6 @@ async function createEmployee(name, firstName, lastName, roleId, managerId) {
 }
 
 async function getEmployees() {
-  //
   const connection = await connectDb();
 
   const employees = await connection.execute("SELECT * from employee;");
@@ -68,7 +68,7 @@ async function updateEmployee() {
       value: role.id,
     };
   });
-  const inquirerChoices = employees.map((employee) => {
+  const inquirerChoicesId = employees.map((employee) => {
     return {
       name: employee.first_name + " " + employee.last_name,
       value: employee.id,
@@ -81,7 +81,7 @@ async function updateEmployee() {
         type: "list",
         name: "updateEmployeeId",
         message: "Which employee do you want to update?",
-        choices: inquirerChoices,
+        choices: inquirerChoicesId,
       },
       {
         type: "list",

@@ -53,7 +53,9 @@ async function createEmployee() {
 async function getEmployees() {
   const connection = await connectDb();
 
-  const employees = await connection.execute("SELECT * from employee;");
+  const employees = await connection.execute(
+    "SELECT * FROM employee JOIN role ON employee.role_id = role.id;"
+  );
 
   return employees[0];
 }
